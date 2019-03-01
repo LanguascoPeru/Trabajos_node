@@ -40,25 +40,40 @@ let mostrar_tareas = () => {
     return listadoHacer;
 }
 
-let actualizar_tareas = (desc, comp = true) => {
+let actualizar_tareas = async(desc, comp = true) => {
     //---obteniendo de bse de datos----
     cargarBD();
-    let obj_tarea = listadoHacer.find((obj) => {
-        if (obj.descripcion == desc) {
-            obj.completado = comp
-        }
-    })
 
-    if (obj_tarea.length == 0) {
-        console.log('No se encontro resultados..')
+    let index = listadoHacer.findIndex((tarea) => {
+        return tarea.descripcion === desc;
+    })
+    if (index >= 0) {
+        listadoHacer[index].completado = comp;
+        let save = await (guardarDB(listadoHacer))
+        return save;
     } else {
-        console.log('Actualizado correctamente..')
+        return 'No se puedo actualizar..';
     }
-    return obj_tarea;
+}
+
+let borrando_tareas = (desc) => {
+    //---obteniendo de bse de datos----
+    cargarBD();
+    let index = listadoHacer.findIndex((tarea) => {
+        return tarea.descripcion === desc;
+    })
+    if (index >= 0) {
+        listadoHacer.splice(1, index);
+        guardarDB(listadoHacer);
+        return listadoHacer;
+    } else {
+        return 'No se encontro tarea para borrar';
+    }
 }
 
 module.exports = {
     crear_tarea: crear_tarea,
     getListado: mostrar_tareas,
-    actualizar_tareas: actualizar_tareas
+    actualizar_tareas: actualizar_tareas,
+    borrando_tareas: borrando_tareas
 }

@@ -23,6 +23,13 @@ const argv = require('yargs')
             alias: 'c',
         },
     })
+    .command('borrar', 'borrando las tareas pendientes', {
+        descripcion: {
+            desc: 'descripcion',
+            demand: true,
+            alias: 'd'
+        }
+    })
     .argv;
 
 module.exports = {
